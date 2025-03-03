@@ -1,0 +1,3 @@
+/home/haidir/project/game_engine/CMakeFiles/engine.dir
+/home/haidir/project/game_engine/CMakeFiles/edit_cache.dir
+/home/haidir/project/game_engine/CMakeFiles/rebuild_cache.dir

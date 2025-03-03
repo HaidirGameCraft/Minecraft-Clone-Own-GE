@@ -1,0 +1,8 @@
+.cache
+.vscode
+build
+cmake_install.cmake_install
+CMakeCache.txt
+engine
+Makefile
+run.sh
