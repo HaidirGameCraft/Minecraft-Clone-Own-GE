@@ -161,6 +161,9 @@ CMakeFiles/engine.dir/main.cpp.o: \
  /home/haidir/project/game_engine/src/engine/Transform.h \
  /home/haidir/project/game_engine/src/engine/Mat4.h \
  /home/haidir/project/game_engine/src/engine/Camera.h \
+ /home/haidir/project/game_engine/src/engine/Frustum.h \
+ /home/haidir/project/game_engine/src/engine/Collider.h \
+ /home/haidir/project/game_engine/src/engine/Plane.h \
  /home/haidir/project/game_engine/src/engine/Shader.h \
  /usr/include/c++/14/map /usr/include/c++/14/bits/stl_tree.h \
  /usr/include/c++/14/bits/node_handle.h \
