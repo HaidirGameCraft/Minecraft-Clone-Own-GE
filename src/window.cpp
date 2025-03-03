@@ -125,7 +125,7 @@ void Window::Render()
     
     // Chunk
     ChunkManager chunkmanager(5, 5);
-    //chunkmanager.GenerateChunks(&material);
+    chunkmanager.GenerateChunks(&material);
 
     Player player;
     player.object.transform.position.y = 84;
@@ -147,7 +147,7 @@ void Window::Render()
 
     Frustum frustum;
     frustum.CalculateFrustum(camera);
-    camera.frustum = &frustum;
+    //camera.frustum = &frustum;
 
     Mesh box = Geometry(Cube);
     GameObject cube_object(&box);

@@ -1,12 +1,10 @@
 #pragma once
-
 #include <engine/Transform.h>
-#include <engine/Frustum.h>
+
 
 class Camera {
 public:
     Transform transform;
-    Frustum *frustum;
 };
 
 class PerspectiveCamera : public Camera
