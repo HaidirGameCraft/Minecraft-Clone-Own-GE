@@ -459,11 +459,13 @@ CMakeFiles/engine.dir/src/Chunk.cpp.o: src/Chunk.cpp \
   src/SimplexNoise.h \
   src/engine/Camera.h \
   src/engine/Collider.h \
+  src/engine/Frustum.h \
   src/engine/GameObject.h \
   src/engine/Mat4.h \
   src/engine/Material.h \
   src/engine/Mesh.h \
   src/engine/OpenGL.h \
+  src/engine/Plane.h \
   src/engine/Texture.h \
   src/engine/Transform.h \
   src/engine/Vector.h \
@@ -561,6 +563,7 @@ CMakeFiles/engine.dir/src/Chunk.cpp.o: src/Chunk.cpp \
   /usr/include/c++/14/bits/cpp_type_traits.h \
   /usr/include/c++/14/bits/cxxabi_forced.h \
   /usr/include/c++/14/bits/cxxabi_init_exception.h \
+  /usr/include/c++/14/bits/enable_special_members.h \
   /usr/include/c++/14/bits/erase_if.h \
   /usr/include/c++/14/bits/exception.h \
   /usr/include/c++/14/bits/exception_defines.h \
@@ -649,6 +652,7 @@ CMakeFiles/engine.dir/src/Chunk.cpp.o: src/Chunk.cpp \
   /usr/include/c++/14/map \
   /usr/include/c++/14/memory \
   /usr/include/c++/14/new \
+  /usr/include/c++/14/optional \
   /usr/include/c++/14/ostream \
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_memory_defs.h \
@@ -822,6 +826,7 @@ CMakeFiles/engine.dir/src/Player.cpp.o: src/Player.cpp \
   /usr/include/c++/14/bits/cpp_type_traits.h \
   /usr/include/c++/14/bits/cxxabi_forced.h \
   /usr/include/c++/14/bits/cxxabi_init_exception.h \
+  /usr/include/c++/14/bits/enable_special_members.h \
   /usr/include/c++/14/bits/erase_if.h \
   /usr/include/c++/14/bits/exception.h \
   /usr/include/c++/14/bits/exception_defines.h \
@@ -910,6 +915,7 @@ CMakeFiles/engine.dir/src/Player.cpp.o: src/Player.cpp \
   /usr/include/c++/14/map \
   /usr/include/c++/14/memory \
   /usr/include/c++/14/new \
+  /usr/include/c++/14/optional \
   /usr/include/c++/14/ostream \
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_memory_defs.h \
@@ -970,36 +976,6 @@ CMakeFiles/engine.dir/src/Player.cpp.o: src/Player.cpp \
   /usr/include/wchar.h \
   /usr/include/wctype.h \
   /usr/lib/gcc/x86_64-redhat-linux/14/include/stdarg.h \
-  /usr/lib/gcc/x86_64-redhat-linux/14/include/stddef.h \
-  /usr/lib/gcc/x86_64-redhat-linux/14/include/stdint.h
-
-CMakeFiles/engine.dir/src/SimplexNoise.cpp.o: src/SimplexNoise.cpp \
-  src/SimplexNoise.h \
-  /usr/include/bits/libc-header-start.h \
-  /usr/include/bits/long-double.h \
-  /usr/include/bits/stdint-intn.h \
-  /usr/include/bits/stdint-least.h \
-  /usr/include/bits/stdint-uintn.h \
-  /usr/include/bits/time64.h \
-  /usr/include/bits/timesize.h \
-  /usr/include/bits/types.h \
-  /usr/include/bits/typesizes.h \
-  /usr/include/bits/wchar.h \
-  /usr/include/bits/wordsize.h \
-  /usr/include/c++/14/bits/version.h \
-  /usr/include/c++/14/cstddef \
-  /usr/include/c++/14/cstdint \
-  /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/x86_64-redhat-linux/bits/c++config.h \
-  /usr/include/c++/14/x86_64-redhat-linux/bits/cpu_defines.h \
-  /usr/include/c++/14/x86_64-redhat-linux/bits/os_defines.h \
-  /usr/include/features-time64.h \
-  /usr/include/features.h \
-  /usr/include/gnu/stubs-64.h \
-  /usr/include/gnu/stubs.h \
-  /usr/include/stdc-predef.h \
-  /usr/include/stdint.h \
-  /usr/include/sys/cdefs.h \
   /usr/lib/gcc/x86_64-redhat-linux/14/include/stddef.h \
   /usr/lib/gcc/x86_64-redhat-linux/14/include/stdint.h
 
@@ -4618,6 +4594,7 @@ CMakeFiles/engine.dir/src/window.cpp.o: src/window.cpp \
   /usr/include/c++/14/bits/cpp_type_traits.h \
   /usr/include/c++/14/bits/cxxabi_forced.h \
   /usr/include/c++/14/bits/cxxabi_init_exception.h \
+  /usr/include/c++/14/bits/enable_special_members.h \
   /usr/include/c++/14/bits/erase_if.h \
   /usr/include/c++/14/bits/exception.h \
   /usr/include/c++/14/bits/exception_defines.h \
@@ -4652,6 +4629,7 @@ CMakeFiles/engine.dir/src/window.cpp.o: src/window.cpp \
   /usr/include/c++/14/bits/shared_ptr_atomic.h \
   /usr/include/c++/14/bits/shared_ptr_base.h \
   /usr/include/c++/14/bits/std_abs.h \
+  /usr/include/c++/14/bits/std_mutex.h \
   /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -4673,6 +4651,7 @@ CMakeFiles/engine.dir/src/window.cpp.o: src/window.cpp \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
   /usr/include/c++/14/bits/this_thread_sleep.h \
+  /usr/include/c++/14/bits/unique_lock.h \
   /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -4681,6 +4660,7 @@ CMakeFiles/engine.dir/src/window.cpp.o: src/window.cpp \
   /usr/include/c++/14/bits/version.h \
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
+  /usr/include/c++/14/chrono \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/concepts \
   /usr/include/c++/14/cstddef \
@@ -4708,7 +4688,9 @@ CMakeFiles/engine.dir/src/window.cpp.o: src/window.cpp \
   /usr/include/c++/14/limits \
   /usr/include/c++/14/map \
   /usr/include/c++/14/memory \
+  /usr/include/c++/14/mutex \
   /usr/include/c++/14/new \
+  /usr/include/c++/14/optional \
   /usr/include/c++/14/ostream \
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_memory_defs.h \
@@ -4762,7 +4744,13 @@ CMakeFiles/engine.dir/src/window.cpp.o: src/window.cpp \
   /usr/lib/gcc/x86_64-redhat-linux/14/include/stdint.h
 
 
+/usr/include/c++/14/cstdint:
+
+/usr/include/c++/14/bits/unique_lock.h:
+
 /usr/include/c++/14/bits/this_thread_sleep.h:
+
+/usr/include/c++/14/bits/std_mutex.h:
 
 /usr/include/dlfcn.h:
 
@@ -4812,17 +4800,9 @@ src/source/Geometry.cpp:
 
 src/engine/Light.h:
 
-src/engine/Plane.h:
-
-src/engine/Frustum.h:
-
 src/source/BoxCollider.cpp:
 
-/usr/include/c++/14/cstdint:
-
 src/World.cpp:
-
-src/SimplexNoise.cpp:
 
 src/engine/Raycast.h:
 
@@ -4838,11 +4818,19 @@ src/Player.h:
 
 /usr/include/c++/14/tr1/legendre_function.tcc:
 
+/usr/include/c++/14/tr1/gamma.tcc:
+
+/usr/include/c++/14/tr1/exp_integral.tcc:
+
 /usr/include/c++/14/bits/streambuf.tcc:
 
 src/window.cpp:
 
 /usr/include/c++/14/ios:
+
+/usr/include/c++/14/tr1/ell_integral.tcc:
+
+/usr/include/c++/14/bits/move.h:
 
 /usr/include/bits/types/sigset_t.h:
 
@@ -4982,8 +4970,6 @@ main.cpp:
 
 /usr/include/c++/14/pstl/pstl_config.h:
 
-/usr/include/bits/types/__sigset_t.h:
-
 /usr/include/c++/14/bits/ptr_traits.h:
 
 /usr/include/bits/types/locale_t.h:
@@ -5052,6 +5038,8 @@ src/engine/RenderList.h:
 
 /usr/include/bits/struct_rwlock.h:
 
+/usr/include/c++/14/chrono:
+
 src/source/Texture.cpp:
 
 /usr/include/c++/14/exception:
@@ -5118,11 +5106,11 @@ src/engine/OpenGL.h:
 
 /usr/include/bits/types/__fpos64_t.h:
 
+/usr/include/c++/14/tr1/beta_function.tcc:
+
 /usr/include/bits/waitstatus.h:
 
 /usr/include/bits/wchar.h:
-
-/usr/include/c++/14/tr1/beta_function.tcc:
 
 /usr/include/c++/14/bits/shared_ptr_base.h:
 
@@ -5135,10 +5123,6 @@ src/engine/OpenGL.h:
 /usr/include/bits/types/struct_timeval.h:
 
 /usr/include/c++/14/bits/streambuf_iterator.h:
-
-/usr/include/sys/types.h:
-
-/usr/include/c++/14/bits/atomic_base.h:
 
 /usr/include/bits/types/time_t.h:
 
@@ -5170,7 +5154,11 @@ src/engine/Shader.h:
 
 /usr/include/bits/types.h:
 
+/usr/include/c++/14/mutex:
+
 /usr/include/bits/atomic_wide_counter.h:
+
+src/engine/Plane.h:
 
 /usr/include/bits/stdint-intn.h:
 
@@ -5239,6 +5227,12 @@ src/source/GameObject.cpp:
 /usr/include/c++/14/bits/stl_tree.h:
 
 /usr/include/c++/14/bits/stl_uninitialized.h:
+
+/usr/include/sys/types.h:
+
+/usr/include/c++/14/bits/atomic_base.h:
+
+/usr/include/c++/14/optional:
 
 /usr/include/c++/14/bits/stringfwd.h:
 
@@ -5344,8 +5338,6 @@ src/source/Frustum.cpp:
 
 /usr/include/c++/14/typeinfo:
 
-/usr/include/c++/14/tr1/exp_integral.tcc:
-
 /usr/include/c++/14/x86_64-redhat-linux/bits/c++allocator.h:
 
 /usr/include/c++/14/thread:
@@ -5402,16 +5394,16 @@ src/Block.h:
 
 src/Chunk.h:
 
+src/engine/Frustum.h:
+
+/usr/include/bits/mathcalls-helper-functions.h:
+
 /usr/include/bits/iscanonical.h:
 
 /usr/include/c++/14/bits/stl_raw_storage_iter.h:
 
 /usr/include/bits/libm-simd-decl-stubs.h:
 
-/usr/include/bits/mathcalls-helper-functions.h:
+/usr/include/bits/types/__sigset_t.h:
 
-/usr/include/c++/14/bits/move.h:
-
-/usr/include/c++/14/tr1/ell_integral.tcc:
-
-/usr/include/c++/14/tr1/gamma.tcc:
+/usr/include/c++/14/bits/enable_special_members.h:

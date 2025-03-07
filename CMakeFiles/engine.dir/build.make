@@ -83,10 +83,24 @@ CMakeFiles/engine.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/engine.dir/main.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/haidir/project/game_engine/main.cpp -o CMakeFiles/engine.dir/main.cpp.s
 
+CMakeFiles/engine.dir/include/SimplexNoise.cpp.o: CMakeFiles/engine.dir/flags.make
+CMakeFiles/engine.dir/include/SimplexNoise.cpp.o: include/SimplexNoise.cpp
+CMakeFiles/engine.dir/include/SimplexNoise.cpp.o: CMakeFiles/engine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/haidir/project/game_engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/engine.dir/include/SimplexNoise.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/engine.dir/include/SimplexNoise.cpp.o -MF CMakeFiles/engine.dir/include/SimplexNoise.cpp.o.d -o CMakeFiles/engine.dir/include/SimplexNoise.cpp.o -c /home/haidir/project/game_engine/include/SimplexNoise.cpp
+
+CMakeFiles/engine.dir/include/SimplexNoise.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/engine.dir/include/SimplexNoise.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/haidir/project/game_engine/include/SimplexNoise.cpp > CMakeFiles/engine.dir/include/SimplexNoise.cpp.i
+
+CMakeFiles/engine.dir/include/SimplexNoise.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/engine.dir/include/SimplexNoise.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/haidir/project/game_engine/include/SimplexNoise.cpp -o CMakeFiles/engine.dir/include/SimplexNoise.cpp.s
+
 CMakeFiles/engine.dir/src/Block.cpp.o: CMakeFiles/engine.dir/flags.make
 CMakeFiles/engine.dir/src/Block.cpp.o: src/Block.cpp
 CMakeFiles/engine.dir/src/Block.cpp.o: CMakeFiles/engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/haidir/project/game_engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/engine.dir/src/Block.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/haidir/project/game_engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/engine.dir/src/Block.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/engine.dir/src/Block.cpp.o -MF CMakeFiles/engine.dir/src/Block.cpp.o.d -o CMakeFiles/engine.dir/src/Block.cpp.o -c /home/haidir/project/game_engine/src/Block.cpp
 
 CMakeFiles/engine.dir/src/Block.cpp.i: cmake_force
@@ -100,7 +114,7 @@ CMakeFiles/engine.dir/src/Block.cpp.s: cmake_force
 CMakeFiles/engine.dir/src/Chunk.cpp.o: CMakeFiles/engine.dir/flags.make
 CMakeFiles/engine.dir/src/Chunk.cpp.o: src/Chunk.cpp
 CMakeFiles/engine.dir/src/Chunk.cpp.o: CMakeFiles/engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/haidir/project/game_engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/engine.dir/src/Chunk.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/haidir/project/game_engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/engine.dir/src/Chunk.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/engine.dir/src/Chunk.cpp.o -MF CMakeFiles/engine.dir/src/Chunk.cpp.o.d -o CMakeFiles/engine.dir/src/Chunk.cpp.o -c /home/haidir/project/game_engine/src/Chunk.cpp
 
 CMakeFiles/engine.dir/src/Chunk.cpp.i: cmake_force
@@ -114,7 +128,7 @@ CMakeFiles/engine.dir/src/Chunk.cpp.s: cmake_force
 CMakeFiles/engine.dir/src/Player.cpp.o: CMakeFiles/engine.dir/flags.make
 CMakeFiles/engine.dir/src/Player.cpp.o: src/Player.cpp
 CMakeFiles/engine.dir/src/Player.cpp.o: CMakeFiles/engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/haidir/project/game_engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/engine.dir/src/Player.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/haidir/project/game_engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/engine.dir/src/Player.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/engine.dir/src/Player.cpp.o -MF CMakeFiles/engine.dir/src/Player.cpp.o.d -o CMakeFiles/engine.dir/src/Player.cpp.o -c /home/haidir/project/game_engine/src/Player.cpp
 
 CMakeFiles/engine.dir/src/Player.cpp.i: cmake_force
@@ -124,20 +138,6 @@ CMakeFiles/engine.dir/src/Player.cpp.i: cmake_force
 CMakeFiles/engine.dir/src/Player.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/engine.dir/src/Player.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/haidir/project/game_engine/src/Player.cpp -o CMakeFiles/engine.dir/src/Player.cpp.s
-
-CMakeFiles/engine.dir/src/SimplexNoise.cpp.o: CMakeFiles/engine.dir/flags.make
-CMakeFiles/engine.dir/src/SimplexNoise.cpp.o: src/SimplexNoise.cpp
-CMakeFiles/engine.dir/src/SimplexNoise.cpp.o: CMakeFiles/engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/haidir/project/game_engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/engine.dir/src/SimplexNoise.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/engine.dir/src/SimplexNoise.cpp.o -MF CMakeFiles/engine.dir/src/SimplexNoise.cpp.o.d -o CMakeFiles/engine.dir/src/SimplexNoise.cpp.o -c /home/haidir/project/game_engine/src/SimplexNoise.cpp
-
-CMakeFiles/engine.dir/src/SimplexNoise.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/engine.dir/src/SimplexNoise.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/haidir/project/game_engine/src/SimplexNoise.cpp > CMakeFiles/engine.dir/src/SimplexNoise.cpp.i
-
-CMakeFiles/engine.dir/src/SimplexNoise.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/engine.dir/src/SimplexNoise.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/haidir/project/game_engine/src/SimplexNoise.cpp -o CMakeFiles/engine.dir/src/SimplexNoise.cpp.s
 
 CMakeFiles/engine.dir/src/World.cpp.o: CMakeFiles/engine.dir/flags.make
 CMakeFiles/engine.dir/src/World.cpp.o: src/World.cpp
@@ -377,10 +377,24 @@ CMakeFiles/engine.dir/src/source/Vec3.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/engine.dir/src/source/Vec3.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/haidir/project/game_engine/src/source/Vec3.cpp -o CMakeFiles/engine.dir/src/source/Vec3.cpp.s
 
+CMakeFiles/engine.dir/src/source/Vec4.cpp.o: CMakeFiles/engine.dir/flags.make
+CMakeFiles/engine.dir/src/source/Vec4.cpp.o: src/source/Vec4.cpp
+CMakeFiles/engine.dir/src/source/Vec4.cpp.o: CMakeFiles/engine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/haidir/project/game_engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/engine.dir/src/source/Vec4.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/engine.dir/src/source/Vec4.cpp.o -MF CMakeFiles/engine.dir/src/source/Vec4.cpp.o.d -o CMakeFiles/engine.dir/src/source/Vec4.cpp.o -c /home/haidir/project/game_engine/src/source/Vec4.cpp
+
+CMakeFiles/engine.dir/src/source/Vec4.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/engine.dir/src/source/Vec4.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/haidir/project/game_engine/src/source/Vec4.cpp > CMakeFiles/engine.dir/src/source/Vec4.cpp.i
+
+CMakeFiles/engine.dir/src/source/Vec4.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/engine.dir/src/source/Vec4.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/haidir/project/game_engine/src/source/Vec4.cpp -o CMakeFiles/engine.dir/src/source/Vec4.cpp.s
+
 CMakeFiles/engine.dir/src/window.cpp.o: CMakeFiles/engine.dir/flags.make
 CMakeFiles/engine.dir/src/window.cpp.o: src/window.cpp
 CMakeFiles/engine.dir/src/window.cpp.o: CMakeFiles/engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/haidir/project/game_engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/engine.dir/src/window.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/haidir/project/game_engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/engine.dir/src/window.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/engine.dir/src/window.cpp.o -MF CMakeFiles/engine.dir/src/window.cpp.o.d -o CMakeFiles/engine.dir/src/window.cpp.o -c /home/haidir/project/game_engine/src/window.cpp
 
 CMakeFiles/engine.dir/src/window.cpp.i: cmake_force
@@ -394,7 +408,7 @@ CMakeFiles/engine.dir/src/window.cpp.s: cmake_force
 CMakeFiles/engine.dir/src/source/glad.c.o: CMakeFiles/engine.dir/flags.make
 CMakeFiles/engine.dir/src/source/glad.c.o: src/source/glad.c
 CMakeFiles/engine.dir/src/source/glad.c.o: CMakeFiles/engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/haidir/project/game_engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building C object CMakeFiles/engine.dir/src/source/glad.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/haidir/project/game_engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building C object CMakeFiles/engine.dir/src/source/glad.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/engine.dir/src/source/glad.c.o -MF CMakeFiles/engine.dir/src/source/glad.c.o.d -o CMakeFiles/engine.dir/src/source/glad.c.o -c /home/haidir/project/game_engine/src/source/glad.c
 
 CMakeFiles/engine.dir/src/source/glad.c.i: cmake_force
@@ -408,10 +422,10 @@ CMakeFiles/engine.dir/src/source/glad.c.s: cmake_force
 # Object files for target engine
 engine_OBJECTS = \
 "CMakeFiles/engine.dir/main.cpp.o" \
+"CMakeFiles/engine.dir/include/SimplexNoise.cpp.o" \
 "CMakeFiles/engine.dir/src/Block.cpp.o" \
 "CMakeFiles/engine.dir/src/Chunk.cpp.o" \
 "CMakeFiles/engine.dir/src/Player.cpp.o" \
-"CMakeFiles/engine.dir/src/SimplexNoise.cpp.o" \
 "CMakeFiles/engine.dir/src/World.cpp.o" \
 "CMakeFiles/engine.dir/src/source/BoxCollider.cpp.o" \
 "CMakeFiles/engine.dir/src/source/Color.cpp.o" \
@@ -429,6 +443,7 @@ engine_OBJECTS = \
 "CMakeFiles/engine.dir/src/source/Texture.cpp.o" \
 "CMakeFiles/engine.dir/src/source/Transform.cpp.o" \
 "CMakeFiles/engine.dir/src/source/Vec3.cpp.o" \
+"CMakeFiles/engine.dir/src/source/Vec4.cpp.o" \
 "CMakeFiles/engine.dir/src/window.cpp.o" \
 "CMakeFiles/engine.dir/src/source/glad.c.o"
 
@@ -436,10 +451,10 @@ engine_OBJECTS = \
 engine_EXTERNAL_OBJECTS =
 
 engine: CMakeFiles/engine.dir/main.cpp.o
+engine: CMakeFiles/engine.dir/include/SimplexNoise.cpp.o
 engine: CMakeFiles/engine.dir/src/Block.cpp.o
 engine: CMakeFiles/engine.dir/src/Chunk.cpp.o
 engine: CMakeFiles/engine.dir/src/Player.cpp.o
-engine: CMakeFiles/engine.dir/src/SimplexNoise.cpp.o
 engine: CMakeFiles/engine.dir/src/World.cpp.o
 engine: CMakeFiles/engine.dir/src/source/BoxCollider.cpp.o
 engine: CMakeFiles/engine.dir/src/source/Color.cpp.o
@@ -457,12 +472,13 @@ engine: CMakeFiles/engine.dir/src/source/Shader.cpp.o
 engine: CMakeFiles/engine.dir/src/source/Texture.cpp.o
 engine: CMakeFiles/engine.dir/src/source/Transform.cpp.o
 engine: CMakeFiles/engine.dir/src/source/Vec3.cpp.o
+engine: CMakeFiles/engine.dir/src/source/Vec4.cpp.o
 engine: CMakeFiles/engine.dir/src/window.cpp.o
 engine: CMakeFiles/engine.dir/src/source/glad.c.o
 engine: CMakeFiles/engine.dir/build.make
 engine: /usr/lib64/libGL.so.1
 engine: CMakeFiles/engine.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/haidir/project/game_engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Linking CXX executable engine"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/haidir/project/game_engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Linking CXX executable engine"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/engine.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

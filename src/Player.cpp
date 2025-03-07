@@ -50,7 +50,7 @@ void Player::DestroyBlock(ChunkManager* mngr, Camera& camera, Vec3 forward) {
         BlockCollider* item = nullptr;
         float distance = 99999;
 
-        for(auto& box_collide : current->colliders )
+        for(auto& box_collide : current->GetAllBlockCollider() )
         {
             BoxCollider box(box_collide.min, box_collide.max);
             RayIntersect<BoxCollider> c = ray.IntersectBox(box, 5);
@@ -65,7 +65,7 @@ void Player::DestroyBlock(ChunkManager* mngr, Camera& camera, Vec3 forward) {
         }
 
         // Left Chunk collider
-        for(auto& box_collide : left->colliders )
+        for(auto& box_collide : left->GetAllBlockCollider() )
         {
             BoxCollider box(box_collide.min, box_collide.max);
             RayIntersect<BoxCollider> c = ray.IntersectBox(box, 5);
@@ -81,7 +81,7 @@ void Player::DestroyBlock(ChunkManager* mngr, Camera& camera, Vec3 forward) {
         }
 
         // Right Chunk collider
-        for(auto& box_collide : right->colliders )
+        for(auto& box_collide : right->GetAllBlockCollider() )
         {
             BoxCollider box(box_collide.min, box_collide.max);
             RayIntersect<BoxCollider> c = ray.IntersectBox(box, 5);
@@ -97,7 +97,7 @@ void Player::DestroyBlock(ChunkManager* mngr, Camera& camera, Vec3 forward) {
         }
 
         // Front Chunk collider
-        for(auto& box_collide : front->colliders )
+        for(auto& box_collide : front->GetAllBlockCollider() )
         {
             BoxCollider box(box_collide.min, box_collide.max);
             RayIntersect<BoxCollider> c = ray.IntersectBox(box, 5);
@@ -113,7 +113,7 @@ void Player::DestroyBlock(ChunkManager* mngr, Camera& camera, Vec3 forward) {
         }
 
         // Back Chunk collider
-        for(auto& box_collide : back->colliders )
+        for(auto& box_collide : back->GetAllBlockCollider() )
         {
             BoxCollider box(box_collide.min, box_collide.max);
             RayIntersect<BoxCollider> c = ray.IntersectBox(box, 5);
@@ -192,7 +192,7 @@ void Player::PlaceBlock(ChunkManager* mngr, Camera& camera, Vec3 forward, BlockT
         // Left Chunk collider
         if( left != nullptr )
         {
-            for(auto& box_collide : left->colliders )
+            for(auto& box_collide : left->GetAllBlockCollider() )
             {
                 BoxCollider box(box_collide.min, box_collide.max);
                 RayIntersect<BoxCollider> c = ray.IntersectBox(box, 5);
@@ -212,7 +212,7 @@ void Player::PlaceBlock(ChunkManager* mngr, Camera& camera, Vec3 forward, BlockT
         // Right Chunk collider
         if( right != nullptr )
         {
-            for(auto& box_collide : right->colliders )
+            for(auto& box_collide : right->GetAllBlockCollider() )
             {
                 BoxCollider box(box_collide.min, box_collide.max);
                 RayIntersect<BoxCollider> c = ray.IntersectBox(box, 5);
@@ -232,7 +232,7 @@ void Player::PlaceBlock(ChunkManager* mngr, Camera& camera, Vec3 forward, BlockT
         // Front Chunk collider
         if( front != nullptr )
         {
-            for(auto& box_collide : front->colliders )
+            for(auto& box_collide : front->GetAllBlockCollider() )
             {
                 BoxCollider box(box_collide.min, box_collide.max);
                 RayIntersect<BoxCollider> c = ray.IntersectBox(box, 5);
@@ -252,7 +252,7 @@ void Player::PlaceBlock(ChunkManager* mngr, Camera& camera, Vec3 forward, BlockT
         // Back Chunk collider
         if( back != nullptr )
         {
-            for(auto& box_collide : back->colliders )
+            for(auto& box_collide : back->GetAllBlockCollider() )
             {
                 BoxCollider box(box_collide.min, box_collide.max);
                 RayIntersect<BoxCollider> c = ray.IntersectBox(box, 5);
@@ -318,18 +318,77 @@ void Player::UpdatePhysics(ChunkManager* mngr) {
     Vec3 index((int)(transform->position.x / MAX_WIDTH), 0, (int)(transform->position.z / MAX_DEPTH));
 
     index.x = ( transform->position.x < 0 ) ? (int)(transform->position.x / MAX_WIDTH - 1) : (int)(transform->position.x / MAX_WIDTH);
+    index.y = std::floor(transform->position.y / MAX_HEIGHT);
     index.z = ( transform->position.z < 0 ) ? (int)(transform->position.z / MAX_DEPTH - 1) : (int)(transform->position.z / MAX_DEPTH);
 
     Chunk* current = mngr->FindChunk(index);
 
+    if( current == nullptr )
+    {
+        pos->Add( velocity );
+        return;
+    }
 
     if( (int)pos->x % MAX_WIDTH == 0 )
     {
-        index.x = (int) std::round(transform->position.x / MAX_WIDTH) - 1;
-        index.z = (int) std::round(transform->position.z / MAX_DEPTH);
+        index.x = (int) std::floor(transform->position.x / MAX_WIDTH) - 1;
+        index.y = (int) std::floor(transform->position.y / MAX_HEIGHT);
+        index.z = (int) std::floor(transform->position.z / MAX_DEPTH);
         Chunk* left = mngr->FindChunk(index);
 
-        std::vector<BlockCollider>& colliders = left->colliders;
+        std::vector<BlockCollider> colliders = left->GetBlockCollider();
+    
+        for(const auto& collider : colliders) {
+            if( 
+                (pos->x < collider.max.x && pos->x + width > collider.min.x) &&
+                (pos->z < collider.max.z && pos->z + width > collider.min.z)
+            )
+            {
+                if( (pos->y < collider.max.y && pos->y + height > collider.min.y) )
+                {
+                    velocity.y = 0;
+                    pos->y = collider.max.y;
+                }
+            }
+        }
+    }
+
+    if( (int)pos->y % MAX_DEPTH == 0 )
+    {
+        index.y = ((int) transform->position.y / MAX_HEIGHT) - 1;
+        index.x = (int) std::floor(transform->position.x / MAX_WIDTH);
+        index.z = (int) std::floor(transform->position.z / MAX_DEPTH);
+        if( index.y >= 0 )
+        {
+            Chunk* bottom = mngr->FindChunk(index);
+
+            std::vector<BlockCollider> colliders = bottom->GetBlockCollider();
+        
+            for(const auto& collider : colliders) {
+        
+                if( 
+                    (pos->x < collider.max.x && pos->x + width > collider.min.x) &&
+                    (pos->z < collider.max.z && pos->z + width > collider.min.z)
+                )
+                {
+                    if( (pos->y < collider.max.y && pos->y + height > collider.min.y) )
+                    {
+                        velocity.y = 0;
+                        pos->y = collider.max.y;
+                    }
+                }
+            }
+        }
+    }
+
+    if( (int)pos->z % MAX_DEPTH == 0 )
+    {
+        index.x = (int) std::floor(transform->position.x / MAX_WIDTH);
+        index.y = (int) std::floor(transform->position.y / MAX_HEIGHT);
+        index.z = ((int) transform->position.z / MAX_DEPTH) - 1;
+        Chunk* back = mngr->FindChunk(index);
+
+        std::vector<BlockCollider> colliders = back->GetBlockCollider();
     
         for(const auto& collider : colliders) {
     
@@ -349,11 +408,12 @@ void Player::UpdatePhysics(ChunkManager* mngr) {
 
     if( (int)pos->z % (MAX_DEPTH - 1) == 0 )
     {
-        index.x = (int) std::round(transform->position.x / MAX_WIDTH);
         index.z = ((int) transform->position.z / MAX_DEPTH) + 1;
+        index.x = (int) std::floor(transform->position.x / MAX_WIDTH);
+        index.y = (int) std::floor(transform->position.y / MAX_HEIGHT);
         Chunk* back = mngr->FindChunk(index);
 
-        std::vector<BlockCollider>& colliders = back->colliders;
+        std::vector<BlockCollider> colliders = back->GetBlockCollider();
     
         for(const auto& collider : colliders) {
     
@@ -374,10 +434,11 @@ void Player::UpdatePhysics(ChunkManager* mngr) {
     if( (int)pos->x % (MAX_WIDTH - 1) == 0 )
     {
         index.x = (int) std::round(transform->position.x / MAX_WIDTH) + 1;
-        index.z = (int) std::round(transform->position.z / MAX_DEPTH);
+        index.y = (int) std::floor(transform->position.y / MAX_HEIGHT);
+        index.z = (int) std::floor(transform->position.z / MAX_DEPTH);
         Chunk* left = mngr->FindChunk(index);
 
-        std::vector<BlockCollider>& colliders = left->colliders;
+        std::vector<BlockCollider> colliders = left->GetBlockCollider();
     
         for(const auto& collider : colliders) {
     
@@ -395,31 +456,36 @@ void Player::UpdatePhysics(ChunkManager* mngr) {
         }
     }
 
-    if( (int)pos->z % MAX_DEPTH == 0 )
+    if( (int)pos->y % (MAX_HEIGHT - 1) == 0 )
     {
-        index.x = (int) std::round(transform->position.x / MAX_WIDTH);
-        index.z = ((int) transform->position.z / MAX_DEPTH) - 1;
-        Chunk* back = mngr->FindChunk(index);
+        index.y = (int) std::round(transform->position.y / MAX_HEIGHT) + 1;
+        index.x = (int) std::floor(transform->position.x / MAX_WIDTH);
+        index.z = (int) std::floor(transform->position.z / MAX_DEPTH);
+        if( index.y >= 0 )
+        {
+            Chunk* top = mngr->FindChunk(index);
 
-        std::vector<BlockCollider>& colliders = back->colliders;
-    
-        for(const auto& collider : colliders) {
-    
-            if( 
-                (pos->x < collider.max.x && pos->x + width > collider.min.x) &&
-                (pos->z < collider.max.z && pos->z + width > collider.min.z)
-            )
-            {
-                if( (pos->y < collider.max.y && pos->y + height > collider.min.y) )
+            std::vector<BlockCollider> colliders = top->GetBlockCollider();
+        
+            for(const auto& collider : colliders) {
+        
+                if( 
+                    (pos->x < collider.max.x && pos->x + width > collider.min.x) &&
+                    (pos->z < collider.max.z && pos->z + width > collider.min.z)
+                )
                 {
-                    velocity.y = 0;
-                    pos->y = collider.max.y;
+                    if( (pos->y < collider.max.y && pos->y + height > collider.min.y) )
+                    {
+                        velocity.y = 0;
+                        pos->y = collider.max.y;
+                    }
                 }
             }
         }
     }
 
-    std::vector<BlockCollider>& colliders = current->colliders;   
+
+    std::vector<BlockCollider> colliders = current->GetBlockCollider();
     for(const auto& collider : colliders) {
         //bool front = IsCollide(*pos, *pos + Vec3(width, height, -width), collider.min, collider.max);
 
@@ -463,7 +529,6 @@ void Player::UpdatePhysics(ChunkManager* mngr) {
     //         }
     //     }
     // }
-
     pos->Add( velocity );
     
 }

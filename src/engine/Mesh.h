@@ -9,10 +9,12 @@ private:
     unsigned int buffers[4];
     unsigned int vao_id;
 public:
+    bool isChanged = false;
     std::vector<float> vertices;
     std::vector<float> normals;
     std::vector<float> uvs;
     std::vector<unsigned int> indices;
+    Mesh();
 
     void Clear();
     void ClearData();

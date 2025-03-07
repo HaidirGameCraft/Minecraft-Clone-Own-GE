@@ -2,86 +2,97 @@
 #include <cmath>
 #include <iostream>
 #include <engine/GameObject.h>
+#include <engine/Collider.h>
 #include <engine/Mesh.h>
+#include <engine/Frustum.h>
 
 #include <SimplexNoise.h>
 
 #define DB_PERLIN_IMPL
 #include "perlin.hpp"
 
+#define PUSH_VERTICES(x, y, z)  this->mesh.vertices.push_back(x); \
+                                this->mesh.vertices.push_back(y); \
+                                this->mesh.vertices.push_back(z);
+#define PUSH_NORMALS(x, y, z)   this->mesh.normals.push_back(x); \
+                                this->mesh.normals.push_back(y); \
+                                this->mesh.normals.push_back(z);
+#define PUSH_UVS(x, y)          this->mesh.uvs.push_back(x); \
+                                this->mesh.uvs.push_back(y);
+
 #define MAX_PERLIN_WIDTH (int) 0xffff
 #define MAX_PERLIN_DEPTH (int) 0xffff
 #define SCALE_PERLIN 0.1f
 #define SCALE_PERLIN_CAVE 0.6f
 
-#define INDEX(vec) std::to_string(vec.x) + "/" + std::to_string(vec.z)
+#define INDEX(vec) std::to_string(vec.x) + + "/" + std::to_string(vec.y) + "/" + std::to_string(vec.z)
 // Chunk code
 
 void Chunk::LeftPlane(Vec3& position) {
-    this->vertices.push_back(Vec3(position.x + 0, position.y +  0, position.z +  0));
-    this->vertices.push_back(Vec3(position.x + 0, position.y +  1, position.z +  0));
-    this->vertices.push_back(Vec3(position.x + 0, position.y +  1, position.z +  1));
-    this->vertices.push_back(Vec3(position.x + 0, position.y +  0, position.z +  1));
+    PUSH_VERTICES(position.x + 0, position.y +  0, position.z +  0);
+    PUSH_VERTICES(position.x + 0, position.y +  1, position.z +  0);
+    PUSH_VERTICES(position.x + 0, position.y +  1, position.z +  1);
+    PUSH_VERTICES(position.x + 0, position.y +  0, position.z +  1);
 
-    this->normals.push_back(Vec3(-1, 0, 0));
-    this->normals.push_back(Vec3(-1, 0, 0));
-    this->normals.push_back(Vec3(-1, 0, 0));
-    this->normals.push_back(Vec3(-1, 0, 0));
+    PUSH_NORMALS(-1, 0, 0);
+    PUSH_NORMALS(-1, 0, 0);
+    PUSH_NORMALS(-1, 0, 0);
+    PUSH_NORMALS(-1, 0, 0);
 }
 void Chunk::RightPlane(Vec3& position) {
-    this->vertices.push_back(Vec3(position.x +  1, position.y +  0, position.z +  1));
-    this->vertices.push_back(Vec3(position.x +  1, position.y +  1, position.z +  1));
-    this->vertices.push_back(Vec3(position.x +  1, position.y +  1, position.z +  0));
-    this->vertices.push_back(Vec3(position.x +  1, position.y +  0, position.z +  0));
+    PUSH_VERTICES(position.x +  1, position.y +  0, position.z +  1);
+    PUSH_VERTICES(position.x +  1, position.y +  1, position.z +  1);
+    PUSH_VERTICES(position.x +  1, position.y +  1, position.z +  0);
+    PUSH_VERTICES(position.x +  1, position.y +  0, position.z +  0);
 
-    this->normals.push_back(Vec3( 1, 0, 0));
-    this->normals.push_back(Vec3( 1, 0, 0));
-    this->normals.push_back(Vec3( 1, 0, 0));
-    this->normals.push_back(Vec3( 1, 0, 0));
+    PUSH_NORMALS( 1, 0, 0);
+    PUSH_NORMALS( 1, 0, 0);
+    PUSH_NORMALS( 1, 0, 0);
+    PUSH_NORMALS( 1, 0, 0);
 }
 void Chunk::FrontPlane(Vec3& position) {
-    this->vertices.push_back(Vec3(position.x +  0, position.y +  0, position.z +  1));
-    this->vertices.push_back(Vec3(position.x +  0, position.y +  1, position.z +  1));
-    this->vertices.push_back(Vec3(position.x +  1, position.y +  1, position.z +  1));
-    this->vertices.push_back(Vec3(position.x +  1, position.y +  0, position.z +  1));
+    PUSH_VERTICES(position.x +  0, position.y +  0, position.z +  1);
+    PUSH_VERTICES(position.x +  0, position.y +  1, position.z +  1);
+    PUSH_VERTICES(position.x +  1, position.y +  1, position.z +  1);
+    PUSH_VERTICES(position.x +  1, position.y +  0, position.z +  1);
 
-    this->normals.push_back(Vec3(0, 0, 1));
-    this->normals.push_back(Vec3(0, 0, 1));
-    this->normals.push_back(Vec3(0, 0, 1));
-    this->normals.push_back(Vec3(0, 0, 1));
+    PUSH_NORMALS(0, 0, 1);
+    PUSH_NORMALS(0, 0, 1);
+    PUSH_NORMALS(0, 0, 1);
+    PUSH_NORMALS(0, 0, 1);
 }
 void Chunk::BackPlane(Vec3& position) {
-    this->vertices.push_back(Vec3(position.x +  1, position.y +  0, position.z +  0));
-    this->vertices.push_back(Vec3(position.x +  1, position.y +  1, position.z +  0));
-    this->vertices.push_back(Vec3(position.x +  0, position.y +  1, position.z +  0));
-    this->vertices.push_back(Vec3(position.x +  0, position.y +  0, position.z +  0));
+    PUSH_VERTICES(position.x +  1, position.y +  0, position.z +  0);
+    PUSH_VERTICES(position.x +  1, position.y +  1, position.z +  0);
+    PUSH_VERTICES(position.x +  0, position.y +  1, position.z +  0);
+    PUSH_VERTICES(position.x +  0, position.y +  0, position.z +  0);
 
-    this->normals.push_back(Vec3(0, 0, -1));
-    this->normals.push_back(Vec3(0, 0, -1));
-    this->normals.push_back(Vec3(0, 0, -1));
-    this->normals.push_back(Vec3(0, 0, -1));
+    PUSH_NORMALS(0, 0, -1);
+    PUSH_NORMALS(0, 0, -1);
+    PUSH_NORMALS(0, 0, -1);
+    PUSH_NORMALS(0, 0, -1);
 }
 void Chunk::TopPlane(Vec3& position) {
-    this->vertices.push_back(Vec3(position.x +  0, position.y +  1, position.z +  1));
-    this->vertices.push_back(Vec3(position.x +  0, position.y +  1, position.z +  0));
-    this->vertices.push_back(Vec3(position.x +  1, position.y +  1, position.z +  0));
-    this->vertices.push_back(Vec3(position.x +  1, position.y +  1, position.z +  1));
+    PUSH_VERTICES(position.x +  0, position.y +  1, position.z +  1);
+    PUSH_VERTICES(position.x +  0, position.y +  1, position.z +  0);
+    PUSH_VERTICES(position.x +  1, position.y +  1, position.z +  0);
+    PUSH_VERTICES(position.x +  1, position.y +  1, position.z +  1);
 
-    this->normals.push_back(Vec3(0, 1, 0));
-    this->normals.push_back(Vec3(0, 1, 0));
-    this->normals.push_back(Vec3(0, 1, 0));
-    this->normals.push_back(Vec3(0, 1, 0));
+    PUSH_NORMALS(0, 1, 0);
+    PUSH_NORMALS(0, 1, 0);
+    PUSH_NORMALS(0, 1, 0);
+    PUSH_NORMALS(0, 1, 0);
 }
 void Chunk::BottomPlane(Vec3& position) {
-    this->vertices.push_back(Vec3(position.x +  0, position.y +  0, position.z +  0));
-    this->vertices.push_back(Vec3(position.x +  0, position.y +  0, position.z +  1));
-    this->vertices.push_back(Vec3(position.x +  1, position.y +  0, position.z +  1));
-    this->vertices.push_back(Vec3(position.x +  1, position.y +  0, position.z +  0));
+    PUSH_VERTICES(position.x +  0, position.y +  0, position.z +  0);
+    PUSH_VERTICES(position.x +  0, position.y +  0, position.z +  1);
+    PUSH_VERTICES(position.x +  1, position.y +  0, position.z +  1);
+    PUSH_VERTICES(position.x +  1, position.y +  0, position.z +  0);
 
-    this->normals.push_back(Vec3(0, -1, 0));
-    this->normals.push_back(Vec3(0, -1, 0));
-    this->normals.push_back(Vec3(0, -1, 0));
-    this->normals.push_back(Vec3(0, -1, 0));
+    PUSH_NORMALS(0, -1, 0);
+    PUSH_NORMALS(0, -1, 0);
+    PUSH_NORMALS(0, -1, 0);
+    PUSH_NORMALS(0, -1, 0);
 }
 
 Chunk::Chunk() {
@@ -102,123 +113,144 @@ void Chunk::Gen() {
         }
     }
 
-    for(int z = 0; z < MAX_DEPTH; z++)
-    {
-        for(int x = 0; x < MAX_WIDTH; x++)
-        {
-            for(int y = 0; y < MID_HEIGHT - 20; y++)
-            {
-                this->blocks[z][x][y] = BlockType::Stone;
-            }
+    // for(int z = 0; z < MAX_DEPTH; z++)
+    // {
+    //     for(int x = 0; x < MAX_WIDTH; x++)
+    //     {
+    //         int yIndex = std::floor(this->position.y / MAX_HEIGHT);
+    //         int yOffset = (int)((int)this->position.y % MAX_HEIGHT);
+    //         if( yIndex < std::floor((MID_HEIGHT - 20) / MAX_HEIGHT))
+    //             for(int y = 0; y < MAX_HEIGHT; y++)
+    //             {
+    //                 this->blocks[z][x][y] = BlockType::Stone;
+    //             }
 
-            float perlin = SimplexNoise::noise((position.x / MAX_WIDTH + (double) x / MAX_WIDTH) * SCALE_PERLIN, (position.z / MAX_DEPTH + (double) z / MAX_DEPTH) * SCALE_PERLIN);
-            float tree_perlin = db::perlin<float>((position.x / MAX_WIDTH + (double) x / MAX_WIDTH) * 0.1f, (position.z / MAX_DEPTH + (double) z / MAX_DEPTH) * 0.1f);
-            perlin = (perlin < 0) ? -perlin : perlin;
+    //         // float perlin = SimplexNoise::noise((position.x / MAX_WIDTH + (double) x / MAX_WIDTH) * SCALE_PERLIN, (position.z / MAX_DEPTH + (double) z / MAX_DEPTH) * SCALE_PERLIN);
+    //         // float tree_perlin = db::perlin<float>((position.x / MAX_WIDTH + (double) x / MAX_WIDTH) * 0.1f, (position.z / MAX_DEPTH + (double) z / MAX_DEPTH) * 0.1f);
+    //         // perlin = (perlin < 0) ? -perlin : perlin;
 
-            int higher_ground = 0;
-            for(int y = MID_HEIGHT - 20; y < (MID_HEIGHT - 20) + perlin * 20; y++)
-            {
-                if( y < ((MID_HEIGHT - 20) + perlin * 20) - 1)
-                    this->blocks[z][x][y] = BlockType::Dirt;
-                else
-                {
-                    this->blocks[z][x][y] = BlockType::Grass;
-                }
-            }
+    //         // int higher_ground = 0;
+    //         if( yIndex >= std::floor((MID_HEIGHT - 20) / MAX_HEIGHT))
+    //         {
+    //             for(int y = MID_HEIGHT - 20; y < (MID_HEIGHT - 20) + perlin * 20; y++)
+    //             {
+    //                 if( y < ((MID_HEIGHT - 20) + perlin * 20) - 1)
+    //                     this->blocks[z][x][y] = BlockType::Dirt;
+    //                 else
+    //                 {
+    //                     this->blocks[z][x][y] = BlockType::Grass;
+    //                 }
+    //             }
+    //         }
 
-            for(int y = 0; y < MID_HEIGHT; y++)
-            {
-                if( y > 4 )
-                {
-                    float noise = SimplexNoise::noise((position.x / MAX_WIDTH + (double) x / MAX_WIDTH) * 0.5f, (float) y / MID_HEIGHT * 2 * 0.5f, (position.z / MAX_DEPTH + (double) z / MAX_DEPTH) * 0.5f);
-                    if( noise >= 0.2f && noise <= 0.3f && y < MID_HEIGHT - 10)
-                    {
-                        this->blocks[z][x][y] = BlockType::None;
-                    }
+    //         // for(int y = 0; y < MID_HEIGHT; y++)
+    //         // {
+    //         //     if( y > 4 )
+    //         //     {
+    //         //         float noise = SimplexNoise::noise((position.x / MAX_WIDTH + (double) x / MAX_WIDTH) * 0.5f, (float) y / MID_HEIGHT * 2 * 0.5f, (position.z / MAX_DEPTH + (double) z / MAX_DEPTH) * 0.5f);
+    //         //         if( noise >= 0.2f && noise <= 0.3f && y < MID_HEIGHT - 10)
+    //         //         {
+    //         //             this->blocks[z][x][y] = BlockType::None;
+    //         //         }
 
-                    noise = SimplexNoise::noise((position.x / MAX_WIDTH + (double) x / MAX_WIDTH) * 2, (float) y / MID_HEIGHT * 2 * 2, (position.z / MAX_DEPTH + (double) z / MAX_DEPTH) * 2);
-                    if( noise > 0.7f && y < MID_HEIGHT - 10)
-                    {
-                        this->blocks[z][x][y] = BlockType::None;
-                    }
+    //         //         noise = SimplexNoise::noise((position.x / MAX_WIDTH + (double) x / MAX_WIDTH) * 2, (float) y / MID_HEIGHT * 2 * 2, (position.z / MAX_DEPTH + (double) z / MAX_DEPTH) * 2);
+    //         //         if( noise > 0.7f && y < MID_HEIGHT - 10)
+    //         //         {
+    //         //             this->blocks[z][x][y] = BlockType::None;
+    //         //         }
 
-                    noise = SimplexNoise::noise((position.x / MAX_WIDTH + (double) x / MAX_WIDTH) * 2, (float) y / MID_HEIGHT * 2, (position.z / MAX_DEPTH + (double) z / MAX_DEPTH) * 2);
-                    if( noise > 0.94f && y < 10)
-                    {
-                        this->blocks[z][x][y] = BlockType::Diamond;
-                    }
-                }
-            }
+    //         //         noise = SimplexNoise::noise((position.x / MAX_WIDTH + (double) x / MAX_WIDTH) * 2, (float) y / MID_HEIGHT * 2, (position.z / MAX_DEPTH + (double) z / MAX_DEPTH) * 2);
+    //         //         if( noise > 0.94f && y < 10)
+    //         //         {
+    //         //             this->blocks[z][x][y] = BlockType::Diamond;
+    //         //         }
+    //         //     }
+    //         // }
 
-            // for(int y = 0; y < MID_HEIGHT - 10; y++)
-            // {
-            //     this->blocks[z][x][y] = BlockType::Stone;
-            // }
+    //         // for(int y = 0; y < MID_HEIGHT - 10; y++)
+    //         // {
+    //         //     this->blocks[z][x][y] = BlockType::Stone;
+    //         // }
 
             
-            // // Stone
-            // for(int y = 0; y < MID_HEIGHT - 10; y++)
-            // {
-            //     if( y >= MID_HEIGHT - 20)
-            //         this->blocks[z][x][y] = BlockType::Dirt;
-            //     else
-            //         this->blocks[z][x][y] = BlockType::Stone;
+    //         // // Stone
+    //         // for(int y = 0; y < MID_HEIGHT - 10; y++)
+    //         // {
+    //         //     if( y >= MID_HEIGHT - 20)
+    //         //         this->blocks[z][x][y] = BlockType::Dirt;
+    //         //     else
+    //         //         this->blocks[z][x][y] = BlockType::Stone;
 
-            //     if( y >= 4 )
-            //     {
-            //         float noise = SimplexNoise::noise((position.x / MAX_WIDTH + (double) x / MAX_WIDTH) * SCALE_PERLIN_CAVE, (float) y / MID_HEIGHT * SCALE_PERLIN_CAVE, (position.z / MAX_DEPTH + (double) z / MAX_DEPTH) * SCALE_PERLIN_CAVE);
-            //         if( noise > 0.6f )
-            //             this->blocks[z][x][y] = BlockType::None;
-            //     }
-            // }
+    //         //     if( y >= 4 )
+    //         //     {
+    //         //         float noise = SimplexNoise::noise((position.x / MAX_WIDTH + (double) x / MAX_WIDTH) * SCALE_PERLIN_CAVE, (float) y / MID_HEIGHT * SCALE_PERLIN_CAVE, (position.z / MAX_DEPTH + (double) z / MAX_DEPTH) * SCALE_PERLIN_CAVE);
+    //         //         if( noise > 0.6f )
+    //         //             this->blocks[z][x][y] = BlockType::None;
+    //         //     }
+    //         // }
             
 
-            // int perlin = db::perlin<double>((position.x / MAX_WIDTH + (double) x / MAX_WIDTH) * SCALE_PERLIN, (position.z / MAX_DEPTH + (double) z / MAX_DEPTH) * SCALE_PERLIN) * 20;
+    //         // int perlin = db::perlin<double>((position.x / MAX_WIDTH + (double) x / MAX_WIDTH) * SCALE_PERLIN, (position.z / MAX_DEPTH + (double) z / MAX_DEPTH) * SCALE_PERLIN) * 20;
 
 
-        }
-    }
+    //     }
+    // }
 
     //CheckAllBlock();
-    GetBlockCollider();
 
     
 }
 
 void Chunk::Regenerate() {
-    GetBlockCollider();
     this->mesh.Clear();
-    this->mesh.ClearData();
+
+    Chunk* left = this->manager->FindChunk((this->position / 16) + Vec3(-1, 0, 0));
+    Chunk* right = this->manager->FindChunk((this->position / 16) + Vec3(1, 0, 0));
+    Chunk* top = this->manager->FindChunk((this->position / 16) + Vec3(0, 1, 0));
+    Chunk* bottom = this->manager->FindChunk((this->position / 16) + Vec3(0, -1, 0));
+    Chunk* front = this->manager->FindChunk((this->position / 16) + Vec3(0, 0, 1));
+    Chunk* back = this->manager->FindChunk((this->position / 16) + Vec3(0, 0,-1));
 
     this->GenerateChunk();
-    
-    if( this->left != nullptr )
+    if( left != nullptr )
     {
-        this->left->right = this;
-        this->left->GenerateChunk();
+        //this->left->right = this;
+        left->GenerateChunk();
     }
     
-    if( this->right != nullptr )
+    if( right != nullptr )
     {
-        this->right->left = this;
-        this->right->GenerateChunk();
+        //this->right->left = this;
+        right->GenerateChunk();
     }
     
-    if( this->front != nullptr )
+    if( front != nullptr )
     {
-        this->front->back = this;
-        this->front->GenerateChunk();
+        //this->front->back = this;
+        front->GenerateChunk();
     }
 
-    if( this->back != nullptr )
+    if( back != nullptr )
     {
-        this->back->front = this;
-        this->back->GenerateChunk();
+        //this->back->front = this;
+        back->GenerateChunk();
+    }
+
+    if( top != nullptr )
+    {
+        //this->front->back = this;
+        top->GenerateChunk();
+    }
+
+    if( bottom != nullptr )
+    {
+        //this->back->front = this;
+        bottom->GenerateChunk();
     }
 }
 
-void Chunk::GetBlockCollider() {
-    this->colliders.clear();
+std::vector<BlockCollider> Chunk::GetBlockCollider() {
+    std::vector<BlockCollider> colliders;
     for(int z = 0; z < MAX_DEPTH; z++)
     {
         for(int x = 0; x < MAX_WIDTH; x++)
@@ -236,6 +268,7 @@ void Chunk::GetBlockCollider() {
             }
         }
     }
+    return colliders;
 }
 
 std::vector<BlockCollider> Chunk::GetAllBlockCollider() {
@@ -291,49 +324,74 @@ void Chunk::CheckAllBlock() {
     }
 }
 
-void Chunk::GenerateChunk(Chunk* left, Chunk* right, Chunk* front, Chunk* back)
+void Chunk::GenerateChunks()
 {
-    this->left = left;
-    this->right = right;
-    this->front = front;
-    this->back = back;
+    //std::cout << "[DEBUG] Position: " << this->position << std::endl;
+    Chunk* left = this->manager->FindChunk((this->position / 16) + Vec3(-1, 0, 0));
+    Chunk* right = this->manager->FindChunk((this->position / 16) + Vec3(1, 0, 0));
+    Chunk* top = this->manager->FindChunk((this->position / 16) + Vec3(0, 1, 0));
+    Chunk* bottom = this->manager->FindChunk((this->position / 16) + Vec3(0, -1, 0));
+    Chunk* front = this->manager->FindChunk((this->position / 16) + Vec3(0, 0, 1));
+    Chunk* back = this->manager->FindChunk((this->position / 16) + Vec3(0, 0,-1));
+
+    
 
     this->GenerateChunk();
-    
-    if( this->left != nullptr )
+    if( left != nullptr )
     {
-        this->left->right = this;
-        this->left->GenerateChunk();
+        //this->left->right = this;
+        left->GenerateChunk();
     }
     
-    if( this->right != nullptr )
+    if( right != nullptr )
     {
-        this->right->left = this;
-        this->right->GenerateChunk();
+        //this->right->left = this;
+        right->GenerateChunk();
     }
     
-    if( this->front != nullptr )
+    if( front != nullptr )
     {
-        this->front->back = this;
-        this->front->GenerateChunk();
+        //this->front->back = this;
+        front->GenerateChunk();
     }
 
-    if( this->back != nullptr )
+    if( back != nullptr )
     {
-        this->back->front = this;
-        this->back->GenerateChunk();
+        //this->back->front = this;
+        back->GenerateChunk();
+    }
+
+    if( top != nullptr )
+    {
+        //this->front->back = this;
+        top->GenerateChunk();
+    }
+
+    if( bottom != nullptr )
+    {
+        //this->back->front = this;
+        bottom->GenerateChunk();
     }
 }
 
 void Chunk::GenerateChunk()
 {
-    this->vertices.clear();
-    this->indices.clear();
-    this->normals.clear();
-    this->uvs.clear();
+    this->mesh.vertices.clear();
+    this->mesh.indices.clear();
+    this->mesh.normals.clear();
+    this->mesh.uvs.clear();
 
-    this->mesh.Clear();
+    //std::cout << "{DEBUG] GC started..." << std::endl;
+
     this->mesh.ClearData();
+    //std::cout << "{DEBUG] GC mesh clear data..." << std::endl;
+
+    Chunk* left = this->manager->FindChunk((this->position / 16) + Vec3(-1, 0, 0));
+    Chunk* right = this->manager->FindChunk((this->position / 16) + Vec3(1, 0, 0));
+    Chunk* top = this->manager->FindChunk((this->position / 16) + Vec3(0, 1, 0));
+    Chunk* bottom = this->manager->FindChunk((this->position / 16) + Vec3(0, -1, 0));
+    Chunk* front = this->manager->FindChunk((this->position / 16) + Vec3(0, 0, 1));
+    Chunk* back = this->manager->FindChunk((this->position / 16) + Vec3(0, 0,-1));
 
     int planes = 0;
     for(int z = 0; z < MAX_DEPTH; z++)
@@ -428,14 +486,38 @@ void Chunk::GenerateChunk()
                     planes++;
                 }
 
-                if( y - 1 < 0 || (y - 1 >= 0 && this->blocks[z][x][y-1] == None) )
+                if(y - 1 == -1 && bottom != nullptr && bottom->blocks[z][x][MAX_HEIGHT - 1] == None)
+                {
+                    BottomPlane(position);
+                    UvsPlane(block->texBottom.x, block->texBottom.y, 160, 256, 16, 16);
+                    planes++;
+                }
+                else if ( y - 1 == -1 && bottom == nullptr )
+                {
+                    BottomPlane(position);
+                    UvsPlane(block->texBottom.x, block->texBottom.y, 160, 256, 16, 16);
+                    planes++;
+                }
+                else if( (y - 1 >= 0 && this->blocks[z][x][y-1] == None) )
                 {
                     BottomPlane(position);
                     UvsPlane(block->texBottom.x, block->texBottom.y, 160, 256, 16, 16);
                     planes++;
                 }
 
-                if( y + 1 >= MAX_HEIGHT || (y + 1 < MAX_HEIGHT && this->blocks[z][x][y+1] == None) )
+                if(y + 1 == MAX_HEIGHT && top != nullptr && top->blocks[z][x][0] == None)
+                {
+                    TopPlane(position);
+                    UvsPlane(block->texTop.x, block->texTop.y, 160, 256, 16, 16);
+                    planes++;
+                }
+                else if ( y + 1 == MAX_HEIGHT && top == nullptr )
+                {
+                    TopPlane(position);
+                    UvsPlane(block->texTop.x, block->texTop.y, 160, 256, 16, 16);
+                    planes++;
+                }
+                else if( (y + 1 < MAX_HEIGHT && this->blocks[z][x][y+1] == None) )
                 {
                     TopPlane(position);
                     UvsPlane(block->texTop.x, block->texTop.y, 160, 256, 16, 16);
@@ -447,19 +529,15 @@ void Chunk::GenerateChunk()
 
     for(int i = 0; i < planes; i++)
     {
-        this->indices.push_back(i * 4 + 0);
-        this->indices.push_back(i * 4 + 1);
-        this->indices.push_back(i * 4 + 2);
-
-        this->indices.push_back(i * 4 + 0);
-        this->indices.push_back(i * 4 + 2);
-        this->indices.push_back(i * 4 + 3);
+        this->mesh.indices.push_back(i * 4 + 0);
+        this->mesh.indices.push_back(i * 4 + 1);
+        this->mesh.indices.push_back(i * 4 + 2);
+        this->mesh.indices.push_back(i * 4 + 0);
+        this->mesh.indices.push_back(i * 4 + 2);
+        this->mesh.indices.push_back(i * 4 + 3);
     }
 
-    this->mesh.SetVertices(this->vertices);
-    this->mesh.SetNormals(this->normals);
-    this->mesh.SetUvs(this->uvs);
-    this->mesh.SetIndices(this->indices);
+    this->mesh.isChanged = true;
 }
 
 Chunk::~Chunk()
@@ -474,10 +552,10 @@ void Chunk::UvsPlane(int x, int y, int texWidth, int texHeight, int w, int h) {
     float _x = _iw * (float) x;
     float _y = _ih * (float) y;
 
-    this->uvs.push_back(Vec3(_x + 0,_y + _ih, 0));
-    this->uvs.push_back(Vec3(_x + 0,_y + 0, 0));
-    this->uvs.push_back(Vec3(_x + _iw,_y + 0, 0));
-    this->uvs.push_back(Vec3(_x + _iw,_y + _ih, 0));
+    PUSH_UVS(_x + 0,_y + _ih);
+    PUSH_UVS(_x + 0,_y + 0);
+    PUSH_UVS(_x + _iw,_y + 0);
+    PUSH_UVS(_x + _iw,_y + _ih);
 }
 
 std::string Chunk::Index() {
@@ -488,10 +566,10 @@ std::string Chunk::Index() {
     return str_index;
 }
 
-ChunkManager::ChunkManager(int max_width, int max_depth) {
+ChunkManager::ChunkManager(int max_width, int max_height,  int max_depth) {
     this->max_width = max_width;
     this->max_depth = max_depth;
-    
+    this->max_height = max_height;
 }
 
 ChunkManager::~ChunkManager() {
@@ -504,52 +582,60 @@ void ChunkManager::GenerateChunks(Material* material) {
     {
         for(int j = -this->max_width; j < this->max_width; j++)
         {
-            Vec3 position = Vec3(j * MAX_DEPTH, 0, i * MAX_WIDTH);
-            Vec3 idx(j, 0, i);
+            GenerateChunk(j, i);
+            // for(int k = 0; k < this->max_height; k++)
+            // {
+            //     Vec3 position = Vec3(j * MAX_DEPTH, k * MAX_HEIGHT, i * MAX_WIDTH);
+            //     Vec3 idx(j, k, i);
 
-            Chunk chunk;
-            chunk.position = position;
-            this->chunks[INDEX(idx)] = chunk;
+            //     Chunk chunk;
+            //     chunk.manager = this;
+            //     chunk.position = position;
+            //     this->chunks[INDEX(idx)] = chunk;
+            // }
         }
    }
 
-   for(int i = -this->max_depth; i < this->max_depth; i++)
-    {
-        for(int j = -this->max_width; j < this->max_width; j++)
-        {
-            Vec3 index(j, 0, i);
-            std::string indstr = INDEX(index);
+//    for(int i = -this->max_depth; i < this->max_depth; i++)
+//     {
+//         for(int j = -this->max_width; j < this->max_width; j++)
+//         {
+//             for(int k = 0; k < this->max_height; k++)
+//             {
+//                 Vec3 index(j, k, i);
+//                 std::string indstr = INDEX(index);
 
-            Chunk* chunk = &this->chunks[indstr];
-            chunk->Gen();
-        }
-   }
+//                 Chunk* chunk = &this->chunks[indstr];
+//                 chunk->Gen();
+//             }
+//         }
+//    }
 
-   for(int i = -this->max_depth; i < this->max_depth; i++)
-    {
-        for(int j = -this->max_width; j < this->max_width; j++)
-        {
-            Vec3 index(j, 0, i);
-            std::string indstr = INDEX(index);
+//    for(int i = -this->max_depth; i < this->max_depth; i++)
+//     {
+//         for(int j = -this->max_width; j < this->max_width; j++)
+//         {
+//             for(int k = 0; k < this->max_height; k++)
+//             {
+//                 Vec3 index(j, k, i);
+//                 std::string indstr = INDEX(index);
 
-            Chunk* chunk = &this->chunks[indstr];
-            Chunk* left =   FindChunk(index + Vec3(-1, 0, 0));
-            Chunk* right =  FindChunk(index + Vec3( 1, 0, 0));
-            Chunk* back =   FindChunk(index + Vec3( 0, 0,-1));
-            Chunk* front =  FindChunk(index + Vec3( 0, 0, 1));
-
-            chunk->GenerateChunk(left, right, front, back);
-        }
-   }
+//                 Chunk* chunk = &this->chunks[indstr];
+//                 chunk->GenerateChunks();
+//             }
+//         }
+//    }
 
 
-   for (auto& chunk : this->chunks)
-   {
-        Mesh* mesh = (Mesh*) &chunk.second.mesh;
-        chunk.second.object.mesh = mesh;
-        chunk.second.object.transform.position = chunk.second.position;
-        chunk.second.object.material = material;
-   }
+//    for (auto& chunk : this->chunks)
+//    {
+        
+//         Mesh* mesh = (Mesh*) &chunk.second.mesh;
+//         chunk.second.object = GameObject();
+//         chunk.second.object->mesh = mesh;
+//         chunk.second.object->transform.position = chunk.second.position;
+//         chunk.second.object->material = material;
+//    }
    
 }
 
@@ -558,12 +644,12 @@ void ChunkManager::UpdateGenerateChunk(int x, int z) {
     std::string indstr = INDEX(index);
 
     Chunk* chunk = &this->chunks[indstr];
-    Chunk* left =   FindChunk(index + Vec3(-1, 0, 0));
-    Chunk* right =  FindChunk(index + Vec3( 1, 0, 0));
-    Chunk* back =   FindChunk(index + Vec3( 0, 0,-1));
-    Chunk* front =  FindChunk(index + Vec3( 0, 0, 1));
+    Chunk* left =   nullptr;
+    Chunk* right =  nullptr;
+    Chunk* back =   nullptr;
+    Chunk* front =  nullptr;
 
-    chunk->GenerateChunk(left, right, front, back);
+    chunk->GenerateChunks();
 }
 
 Chunk* ChunkManager::FindChunk(Vec3 idx) {
@@ -572,30 +658,121 @@ Chunk* ChunkManager::FindChunk(Vec3 idx) {
 }
 
 void ChunkManager::GenerateChunk(int x, int z) {
-    Vec3 ind(x, 0, z);
-    std::string strndx = INDEX(ind);
-
-    this->chunks[strndx] = Chunk();
+    for(int y = 0; y < this->max_height; y++)
+    {
+        Vec3 ind(x, y, z);
+        std::string strndx = INDEX(ind);
     
-    Chunk *chunk = &this->chunks[strndx];
-    chunk->position = Vec3(x * MAX_WIDTH, 0, z * MAX_DEPTH);
-    chunk->Gen();
+        this->chunks[strndx] = Chunk();
+    
+        //std::cout << "[DEBUG] Generate Chunk Test 1..." << std::endl;
+        Chunk *chunk = &this->chunks[strndx];
+        
+        chunk->manager = this;
+        chunk->position = Vec3(x * MAX_WIDTH, y * MAX_HEIGHT, z * MAX_DEPTH);
+        chunk->Gen();
+        //std::cout << "[DEBUG] Generate Chunk Test 3..." << std::endl;
+    
+        Mesh* mesh = &chunk->mesh;
+        chunk->object = GameObject();
+        chunk->object->mesh = mesh;
+        chunk->object->transform.position = chunk->position;
+        chunk->object->material = material;
+    }
 
-    chunk->GenerateChunk(
-        FindChunk(ind + Vec3(-1, 0, 0)),
-        FindChunk(ind + Vec3( 1, 0, 0)),
-        FindChunk(ind + Vec3( 0, 0, 1)),
-        FindChunk(ind + Vec3( 0, 0,-1))
-    );
+    Vec3 ind(x, 0, z);
+    for(z = 0; z < MAX_DEPTH; z++)
+    {
+        for(x = 0; x < MAX_WIDTH; x++)
+        {
+            for(int y = 0; y < MID_HEIGHT - 20; y++)
+            {
+                ind.y = std::floor(y / MAX_HEIGHT);
+                Chunk* chunk = FindChunk(ind);
+                chunk->blocks[z][x][y % MAX_HEIGHT] = BlockType::Stone;
+            }
 
-    Mesh* mesh = &chunk->mesh;
-    chunk->object.mesh = mesh;
-    chunk->object.transform.position = chunk->position;
-    chunk->object.material = material;
+            float perlin = SimplexNoise::noise((ind.x * MAX_WIDTH / MAX_WIDTH + (double) x / MAX_WIDTH) * SCALE_PERLIN, (ind.z * MAX_DEPTH / MAX_DEPTH + (double) z / MAX_DEPTH) * SCALE_PERLIN);
+            //float tree_perlin = db::perlin<float>((position.x / MAX_WIDTH + (double) x / MAX_WIDTH) * 0.1f, (position.z / MAX_DEPTH + (double) z / MAX_DEPTH) * 0.1f);
+            perlin = (perlin < 0) ? -perlin : perlin;
+
+            // int higher_ground = 0;
+            for(int y = MID_HEIGHT - 20; y < (MID_HEIGHT - 20) + perlin * 20; y++)
+            {
+                ind.y = std::floor(y / MAX_HEIGHT);
+                Chunk* chunk = FindChunk(ind);
+                if( y < ((MID_HEIGHT - 20) + perlin * 20) - 1)
+                    chunk->blocks[z][x][y % MAX_HEIGHT] = BlockType::Dirt;
+                else
+                {
+                    chunk->blocks[z][x][y % MAX_HEIGHT] = BlockType::Grass;
+                }
+            }
+
+            for(int y = 0; y < MID_HEIGHT; y++)
+            {
+                if( y > 4 )
+                {
+                    ind.y = std::floor(y / MAX_HEIGHT);
+                    Chunk* chunk = FindChunk(ind);
+                    float noise = SimplexNoise::noise((ind.x + (double) x / MAX_WIDTH) * 0.5f, (float) y / MID_HEIGHT * 2 * 0.5f, (ind.z + (double) z / MAX_DEPTH) * 0.5f);
+                    if( noise >= 0.2f && noise <= 0.3f && y < MID_HEIGHT - 10)
+                    {
+                        chunk->blocks[z][x][y % MAX_HEIGHT] = BlockType::None;
+                    }
+
+                    noise = SimplexNoise::noise((ind.x + (double) x / MAX_WIDTH) * 2, (float) y / MID_HEIGHT * 2 * 2, (ind.z + (double) z / MAX_DEPTH) * 2);
+                    if( noise > 0.7f && y < MID_HEIGHT - 10)
+                    {
+                        chunk->blocks[z][x][y % MAX_HEIGHT] = BlockType::None;
+                    }
+
+                    noise = SimplexNoise::noise((ind.x + (double) x / MAX_WIDTH) * 2, (float) y / MID_HEIGHT * 2, (ind.z + (double) z / MAX_DEPTH) * 2);
+                    if( noise > 0.94f && y < 10)
+                    {
+                        chunk->blocks[z][x][y % MAX_HEIGHT] = BlockType::Diamond;
+                    }
+                }
+            }
+        }
+    }
+
+    for(int y = 0; y < this->max_height; y++)
+    {
+        ind.y = y;
+        Chunk *chunk = FindChunk(ind);
+        chunk->GenerateChunks();
+    }
 }
 
 void ChunkManager::ChunkRender(OpenGLRenderer& renderer, Camera* camera, Transform* transform) {
     Vec3* position = &transform->position;
+
+    int render_distance = 5;
+    for(int z = -render_distance; z < render_distance; z++)
+    {
+        for(int x = -render_distance; x < render_distance; x++)
+        {
+            for(int y = -10; y < 10; y++)
+            {
+                Vec3 index(
+                    (int)(position->x / MAX_WIDTH) + x,
+                    (int)(position->y / MAX_HEIGHT) + y,
+                    (int)(position->z / MAX_DEPTH) + z
+                );
+    
+                Chunk* chunk = FindChunk(index);
+                
+                if( chunk != nullptr && chunk->object.has_value() )
+                    renderer.RenderObject(&chunk->object.value(), camera);
+            }
+        }
+    }
+    
+}
+
+void ChunkManager::UpdatePlayerChunk(Camera* camera) {
+    Vec3* position = &camera->transform.position;
 
     int render_distance = 5;
     for(int z = -render_distance; z < render_distance; z++)
@@ -610,13 +787,10 @@ void ChunkManager::ChunkRender(OpenGLRenderer& renderer, Camera* camera, Transfo
 
             Chunk* chunk = FindChunk(index);
             
-            if( chunk != nullptr )
-                renderer.RenderObject(&chunk->object, camera);
-            else
+            if( chunk == nullptr )
             {
                 this->GenerateChunk(index.x, index.z);
             }
         }
     }
-    
 }

@@ -11,6 +11,7 @@ public:
     Material* material;
     Transform transform;
     unsigned int id_shader;
+    bool is_active = true;
     GameObject();
     GameObject(Mesh* mesh);
 

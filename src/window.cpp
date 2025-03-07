@@ -12,8 +12,10 @@
 #include <Block.h>
 #include <Player.h>
 #include <iostream>
+#include <chrono>
 
 #include <thread>
+#include <mutex>
 
 std::vector<ShaderFile> shader_files;
 
@@ -100,9 +102,20 @@ int Window::Initialize()
     return 0;
 }
 
+ChunkManager chunkmanager(5, 8, 5);
+PerspectiveCamera camera(55, 800 / 600, 0.01, 1000);
+bool is_quit = false;
+std::mutex mtx_chunk;
+
+int64_t GetMiliseconds() {
+    auto now = std::chrono::system_clock::now();
+    auto duration = now.time_since_epoch();
+    return std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+}
+
 void Window::Render()
 {
-
+    
     // Initialize Shader
     shader_files.push_back(ShaderFile{"BasicShader", "./shadercode/vertex.glsl", "./shadercode/fragment.glsl"});
 
@@ -110,7 +123,6 @@ void Window::Render()
 
     float speedCameraMove = 0.5;
     float sensitivity = 0.08;
-    PerspectiveCamera camera(55, 800 / 600, 0.01, 1000);
 
     Material material;
     material.color = Color(0.0f, 1.0f, 0.0f, 1.0f);
@@ -124,15 +136,24 @@ void Window::Render()
     Block::InitializeBlocks();
     
     // Chunk
-    ChunkManager chunkmanager(5, 5);
     chunkmanager.GenerateChunks(&material);
+    
+    auto chunk_thread_handle = [=]() -> void {
+        while( !is_quit ) {
+            std::lock_guard<std::mutex> lock(mtx_chunk);
+            chunkmanager.UpdatePlayerChunk(&camera);
+        }
+    };
+
+    std::thread cthread(chunk_thread_handle);
+    
 
     Player player;
     player.object.transform.position.y = 84;
     
-    // camera.transform.position = Vec3(0, 64, 0);
+    camera.transform.position.y = 6 * MAX_HEIGHT + MAX_HEIGHT;
     // camera.transform.position.x = 5 * 8 / 2;
-    // camera.transform.position.z = 5 * 8 / 2;
+    camera.transform.position.z = 16;
 
     std::shared_ptr<Light> light = std::make_shared<Light>();
     light->transform.position = Vec3(0.9f, 0.8f, 0.7f);
@@ -140,14 +161,14 @@ void Window::Render()
 
     this->renderer.SetColor(0, 0.5, 0.8, 1.0);
 
-    camera.transform.position = Vec3(0, 0, 0);
     camera.Create_Projection();
     camera.UpdateMatrix();
-    std::cout << "Projection Matrix: \n" << camera.transform.projection_matrix << std::endl;
-
+    std::cout << "Projection Matrix: \n" << camera.transform.world_matrix * camera.transform.projection_matrix << std::endl;
+    
+    
     Frustum frustum;
     frustum.CalculateFrustum(camera);
-    //camera.frustum = &frustum;
+    camera.frustum = &frustum;
 
     Mesh box = Geometry(Cube);
     GameObject cube_object(&box);
@@ -166,9 +187,17 @@ void Window::Render()
     bool is_right_click = false;
     bool is_left_click = false;
 
+    // Frame
+    int frames = 0;
+    int64_t begin_time = GetMiliseconds();
+    int64_t prev_time = begin_time;
+
     /* Render Object */
     while( !glfwWindowShouldClose(this->window) )
     {
+
+        begin_time = GetMiliseconds();
+
         glfwGetWindowSize(this->window, &this->width, &this->height);
         camera.aspect = (float)this->width / (float)this->height;
         this->renderer.width = this->width;
@@ -210,8 +239,13 @@ void Window::Render()
 
         if( keys[GLFW_KEY_W] || keys[GLFW_KEY_S] ) {
             camera.transform.position.x += forward.x * (keys[GLFW_KEY_W] ? -speedCameraMove : speedCameraMove);
-            camera.transform.position.y += forward.y * (keys[GLFW_KEY_W] ? -speedCameraMove : speedCameraMove);
+            //camera.transform.position.y += forward.y * (keys[GLFW_KEY_W] ? -speedCameraMove : speedCameraMove);
             camera.transform.position.z += forward.z * (keys[GLFW_KEY_W] ? -speedCameraMove : speedCameraMove);
+        }
+
+        if( keys[GLFW_KEY_Q] || keys[GLFW_KEY_E] )
+        {
+            camera.transform.position.y += keys[GLFW_KEY_E] ? speedCameraMove : -speedCameraMove;
         }
 
 
@@ -225,7 +259,7 @@ void Window::Render()
         this->renderer.Render(&camera);
         frustum.CalculateFrustum(camera);
 
-        chunkmanager.ChunkRender(renderer, &camera, &player.object.transform);
+        chunkmanager.ChunkRender(renderer, &camera, &camera.transform);
 
         renderer.RenderObject(&player.object, &camera);
         player.UpdatePhysics(&chunkmanager);
@@ -234,7 +268,7 @@ void Window::Render()
         {
             if( is_right_click == false )
             {
-                player.PlaceBlock(&chunkmanager, camera, forward, Grass);
+                //player.PlaceBlock(&chunkmanager, camera, forward, Grass);
                 is_right_click = true;
             }
         } else {
@@ -245,21 +279,37 @@ void Window::Render()
         {
             if( is_left_click == false )
             {
-                player.DestroyBlock(&chunkmanager, camera, forward);
+                //player.DestroyBlock(&chunkmanager, camera, forward);
                 is_left_click = true;
             }
         } else {
             is_left_click = false;
         }
 
+
+        //std::cout << "Camera: " << camera.transform.position << std::endl;
+
         glfwSwapBuffers(window);
         glfwPollEvents();
 
-        if( keys[GLFW_KEY_Q] ) {
+        if( keys[GLFW_KEY_P] ) {
             glfwSetWindowShouldClose(this->window, true);
             break;
         }
+
+        int64_t deltaTime = begin_time - prev_time;
+        frames++;
+        if( deltaTime > 1000 )
+        {
+            double fps = ( (double) frames / (double) deltaTime ) * 1000.0;
+            std::cout << "FPS Counter: " << fps << std::endl;
+
+            frames = 0;
+            prev_time = begin_time;
+        }
     }
+    is_quit = true;
+    cthread.join();
     //chunkmanager.~ChunkManager();
 
     printf("OpenGL End");

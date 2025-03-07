@@ -2,6 +2,10 @@
 #include <glad/glad.h>
 #include <stdio.h>
 
+Mesh::Mesh() {
+    this->isChanged = true;
+}
+
 void Mesh::SetVertices(std::vector<Vec3> vertices) {
     this->vertices.clear();
     for(int i = 0; i < vertices.size(); i++)
@@ -35,11 +39,13 @@ void Mesh::SetIndices(std::vector<unsigned int> indices) {
 void Mesh::GenVBO()
 {
 
-    if( glIsVertexArray(vao_id) )
+    if( this->isChanged == false )
         return;
+
+    if( !glIsVertexArray(this->vao_id) )
+        glCreateVertexArrays(1, &vao_id);
         
     glGenBuffers(4, this->buffers);
-    glCreateVertexArrays(1, &vao_id);
     glBindVertexArray(vao_id);
 
     if( this->vertices.size() != 0 )
@@ -73,11 +79,14 @@ void Mesh::GenVBO()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(unsigned int), this->indices.data(), GL_STATIC_DRAW);
 
     glBindVertexArray(NULL);
+    glDeleteBuffers(4, this->buffers);
+
+    this->isChanged = false;
 }
 
 void Mesh::Clear() {
     glDeleteVertexArrays(1, &this->vao_id);
-    glDeleteBuffers(4, this->buffers);
+    //glDeleteBuffers(4, this->buffers);
 }
 
 void Mesh::ClearData() {

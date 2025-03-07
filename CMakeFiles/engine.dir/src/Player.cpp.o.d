@@ -165,7 +165,8 @@ CMakeFiles/engine.dir/src/Player.cpp.o: \
  /usr/include/c++/14/bits/node_handle.h \
  /usr/include/c++/14/bits/stl_map.h \
  /usr/include/c++/14/bits/stl_multimap.h \
- /usr/include/c++/14/bits/erase_if.h \
+ /usr/include/c++/14/bits/erase_if.h /usr/include/c++/14/optional \
+ /usr/include/c++/14/bits/enable_special_members.h \
  /home/haidir/project/game_engine/src/Block.h \
  /home/haidir/project/game_engine/src/engine/Shader.h \
  /home/haidir/project/game_engine/src/engine/Geometry.h \
